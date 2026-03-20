@@ -1,6 +1,8 @@
 # Lua
 
-Here's the complete syntax of Lua in eBNF. (This is Lua 5.5)
+The complete syntax of Lua in eBNF. (This is Lua 5.5)
+
+Reference: https://lua.org/manual/5.5/manual.html#9
 
 ```
 chunk ::= block

@@ -6,11 +6,10 @@
       "camelcase": "Lua",
       "title": "Lua",
       "scope": "source.lua",
-      "file-types": [
-        "lua"
-      ],
+      "file-types": ["lua"],
       "injection-regex": "^lua$",
-      "class-name": "TreeSitterLua"
+      "class-name": "TreeSitterLua",
+      "highlights": "queries/highlights.scm"
     }
   ],
   "metadata": {
