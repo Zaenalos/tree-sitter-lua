@@ -19,6 +19,14 @@ bool tree_sitter_lua_external_scanner_scan(void *payload, TSLexer *lexer,
   if (!valid_symbols[LONG_BRACKET])
     return false;
 
+  // SKIP ALL WHITESPACE CUZ EXTERNAL
+  // SCANNER DOESN'T AUTOMATICALLY SKIP
+  // EXTRAS!!!
+  while (lexer->lookahead == ' ' || lexer->lookahead == '\t' ||
+         lexer->lookahead == '\n' || lexer->lookahead == '\r') {
+    lexer->advance(lexer, true); // true = treat as whitespace
+  }
+
   // Must start with '['
   if (lexer->lookahead != '[')
     return false;

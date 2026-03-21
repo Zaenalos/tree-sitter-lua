@@ -44,6 +44,8 @@ export default grammar({
     // Root
     // =========================================================================
 
+    // I'd consider source file as chunk
+    // chunk ::= block
     source_file: ($) => seq(optional($.shebang), optional($.block)),
 
     // You should already know what a shebang is, you Linux nerd!
@@ -74,26 +76,20 @@ export default grammar({
     boolean: ($) => choice("false", "true"),
     numeral: ($) =>
       choice(
-        // Hex float with positive exponent: 0xA23p+4
-        /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+[pP][+][0-9]+/,
-        // Hex float with negative exponent: 0xA23p-4
-        /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+[pP][-][0-9]+/,
-        // Hex float without exponent: 0x0.1E
+        // HEX (most specific first)
+        /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+[pP][+-]?[0-9]+/,
+        /0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+/,
         /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+/,
-        // Hex integer: 0xff, 0xBEBADA
         /0[xX][0-9a-fA-F]+/,
-        // Decimal float with positive exponent: 3.14e+2
-        /[0-9]+(\.[0-9]*)?[eE][+][0-9]+/,
-        // Decimal float with negative exponent: 3.14e-2
-        /[0-9]+(\.[0-9]*)?[eE][-][0-9]+/,
-        // Decimal float/integer: 3, 3.0, 3.1416
-        /[0-9]+(\.[0-9]*)?/,
-        // Dot-leading float with positive exponent: .5e+2
-        /\.[0-9]+[eE][+][0-9]+/,
-        // Dot-leading float with negative exponent: .5e-2
-        /\.[0-9]+[eE][-][0-9]+/,
-        // Dot-leading float: .5
+
+        // DECIMAL WITH EXPONENT (must come BEFORE plain numbers)
+        /[0-9]+(\.[0-9]*)?[eE][+-]?[0-9]+/,
+        /\.[0-9]+[eE][+-]?[0-9]+/,
+
+        // DECIMAL WITHOUT EXPONENT
+        /[0-9]+\.[0-9]*/,
         /\.[0-9]+/,
+        /[0-9]+/,
       ),
     string: ($) => choice($.short_string, $.long_string),
 

@@ -164,7 +164,7 @@ function sayHi()
   print("hi")
 end
 
-local function sum(...)
+local function sum(...TOTAL)
   local total = 0
   for _, v in ipairs({...}) do
     total = total + v
