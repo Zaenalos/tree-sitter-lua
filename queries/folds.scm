@@ -1,4 +1,4 @@
-=== FOLDS ===
+; === FOLDS ===
 
 ; Function bodies
 (funcbody) @fold

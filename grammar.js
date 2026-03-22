@@ -34,17 +34,23 @@ export default grammar({
   extras: ($) => [$.comment, /\s/],
 
   externals: ($) => [
-    $._long_bracket, // handles [=*[...]=*] for both strings and comments
+    $._long_string, // [=[...]=] for string literals
+    $._long_comment_body, // [=[...]=] for long comments (no whitespace skip)
   ],
 
-  conflicts: ($) => [[$.exp, $.prefixexp], [$.namelist]],
+  conflicts: ($) => [
+    [$.namelist],
+    [$.exp, $.prefixexp],
+    // [$.functioncall, $.prefixexp],
+    [$.call_expression, $.exp],
+  ],
 
   rules: {
     // =========================================================================
     // Root
     // =========================================================================
 
-    // I'd consider source file as chunk
+    // I'd consider source as chunk here
     // chunk ::= block
     source_file: ($) => seq(optional($.shebang), optional($.block)),
 
@@ -55,14 +61,10 @@ export default grammar({
     // Comments
     // =========================================================================
 
-    comment: ($) =>
-      choice(
-        seq("--", /[^\n]*/), // short comment
-        seq("--", $._long_bracket), // long comment
-      ),
+    comment: ($) => choice(seq("--", $._long_comment_body), seq("--", /[^\n]*/)),
 
     // =========================================================================
-    // Identifiers
+    // Identifiers|Names
     // =========================================================================
 
     Name: ($) => /[a-zA-Z_][a-zA-Z0-9_]*/,
@@ -76,13 +78,13 @@ export default grammar({
     boolean: ($) => choice("false", "true"),
     numeral: ($) =>
       choice(
-        // HEX (most specific first)
+        // HEX
         /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+[pP][+-]?[0-9]+/,
         /0[xX][0-9a-fA-F]+[pP][+-]?[0-9]+/,
         /0[xX][0-9a-fA-F]*\.[0-9a-fA-F]+/,
         /0[xX][0-9a-fA-F]+/,
 
-        // DECIMAL WITH EXPONENT (must come BEFORE plain numbers)
+        // DECIMAL WITH EXPONENT
         /[0-9]+(\.[0-9]*)?[eE][+-]?[0-9]+/,
         /\.[0-9]+[eE][+-]?[0-9]+/,
 
@@ -112,7 +114,13 @@ export default grammar({
         /\\u\{[0-9a-fA-F]+\}/, // Unicode: \u{XXX}
       ),
 
-    long_string: ($) => $._long_bracket,
+    long_string: ($) => $._long_string,
+
+    call_expression: ($) =>
+      choice(
+        seq(field("callee", $.prefixexp), field("args", $.args)),
+        seq(field("object", $.prefixexp), ":", field("method", $.Name), field("args", $.args)),
+      ),
 
     // =========================================================================
     // Expressions
@@ -128,6 +136,7 @@ export default grammar({
         $.string,
         $.vararg,
         $.functiondef,
+        $.call_expression,
         $.prefixexp,
         $.tableconstructor,
         $.binary_expression,
@@ -136,55 +145,62 @@ export default grammar({
 
     binary_expression: ($) =>
       choice(
-        prec.left(PRECEDENCE.OR[0], seq($.exp, "or", $.exp)),
-        prec.left(PRECEDENCE.AND[0], seq($.exp, "and", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, "==", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, "~=", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, "<", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, "<=", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, ">", $.exp)),
-        prec.left(PRECEDENCE.EQUALITY[0], seq($.exp, ">=", $.exp)),
-        prec.left(PRECEDENCE.BITOR[0], seq($.exp, "|", $.exp)),
-        prec.left(PRECEDENCE.BITXOR[0], seq($.exp, "~", $.exp)),
-        prec.left(PRECEDENCE.BITAND[0], seq($.exp, "&", $.exp)),
-        prec.left(PRECEDENCE.SHIFT[0], seq($.exp, "<<", $.exp)),
-        prec.left(PRECEDENCE.SHIFT[0], seq($.exp, ">>", $.exp)),
-        prec.right(PRECEDENCE.CONCAT[0], seq($.exp, "..", $.exp)),
-        prec.left(PRECEDENCE.ADD[0], seq($.exp, "+", $.exp)),
-        prec.left(PRECEDENCE.ADD[0], seq($.exp, "-", $.exp)),
-        prec.left(PRECEDENCE.MUL[0], seq($.exp, "*", $.exp)),
-        prec.left(PRECEDENCE.MUL[0], seq($.exp, "/", $.exp)),
-        prec.left(PRECEDENCE.MUL[0], seq($.exp, "//", $.exp)),
-        prec.left(PRECEDENCE.MUL[0], seq($.exp, "%", $.exp)),
-        prec.right(PRECEDENCE.POWER[0], seq($.exp, "^", $.exp)),
+        prec.left(PRECEDENCE.OR[0], seq(field("left", $.exp), "or", field("right", $.exp))),
+        prec.left(PRECEDENCE.AND[0], seq(field("left", $.exp), "and", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), "==", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), "~=", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), "<", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), "<=", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), ">", field("right", $.exp))),
+        prec.left(PRECEDENCE.EQUALITY[0], seq(field("left", $.exp), ">=", field("right", $.exp))),
+        prec.left(PRECEDENCE.BITOR[0], seq(field("left", $.exp), "|", field("right", $.exp))),
+        prec.left(PRECEDENCE.BITXOR[0], seq(field("left", $.exp), "~", field("right", $.exp))),
+        prec.left(PRECEDENCE.BITAND[0], seq(field("left", $.exp), "&", field("right", $.exp))),
+        prec.left(PRECEDENCE.SHIFT[0], seq(field("left", $.exp), "<<", field("right", $.exp))),
+        prec.left(PRECEDENCE.SHIFT[0], seq(field("left", $.exp), ">>", field("right", $.exp))),
+        prec.right(PRECEDENCE.CONCAT[0], seq(field("left", $.exp), "..", field("right", $.exp))),
+        prec.left(PRECEDENCE.ADD[0], seq(field("left", $.exp), "+", field("right", $.exp))),
+        prec.left(PRECEDENCE.ADD[0], seq(field("left", $.exp), "-", field("right", $.exp))),
+        prec.left(PRECEDENCE.MUL[0], seq(field("left", $.exp), "*", field("right", $.exp))),
+        prec.left(PRECEDENCE.MUL[0], seq(field("left", $.exp), "/", field("right", $.exp))),
+        prec.left(PRECEDENCE.MUL[0], seq(field("left", $.exp), "//", field("right", $.exp))),
+        prec.left(PRECEDENCE.MUL[0], seq(field("left", $.exp), "%", field("right", $.exp))),
+        prec.right(PRECEDENCE.POWER[0], seq(field("left", $.exp), "^", field("right", $.exp))),
       ),
 
     unary_expression: ($) =>
       prec(
         PRECEDENCE.UNARY,
-        choice(seq("-", $.exp), seq("not", $.exp), seq("#", $.exp), seq("~", $.exp)),
+        choice(
+          seq("-", field("operand", $.exp)),
+          seq("not", field("operand", $.exp)),
+          seq("#", field("operand", $.exp)),
+          seq("~", field("operand", $.exp)),
+        ),
       ),
 
     // =========================================================================
-    // Prefix expressions, variables, and function calls
+    // Prefix expressions, and variables
     // =========================================================================
-
-    // Flattened to avoid mutual left recursion between var/prefixexp/functioncall.
+    // Flattened to avoid mutual left recursion between var/prefixexp.
     prefixexp: ($) =>
       choice(
-        $.Name,
-        seq($.prefixexp, "[", $.exp, "]"), // index
-        seq($.prefixexp, ".", $.Name), // field access
-        seq($.prefixexp, $.args), // call
-        seq($.prefixexp, ":", $.Name, $.args), // method call
-        seq("(", $.exp, ")"),
+        $.call_expression,
+        field("base", $.Name),
+        seq(field("object", $.prefixexp), "[", field("index", $.exp), "]"),
+        seq(field("object", $.prefixexp), ".", field("field", $.Name)),
+        seq("(", field("value", $.exp), ")"),
       ),
 
     var: ($) =>
-      prec(1, choice($.Name, seq($.prefixexp, "[", $.exp, "]"), seq($.prefixexp, ".", $.Name))),
-
-    functioncall: ($) =>
-      prec(1, choice(seq($.prefixexp, $.args), seq($.prefixexp, ":", $.Name, $.args))),
+      prec(
+        1,
+        choice(
+          field("base", $.Name),
+          seq(field("object", $.prefixexp), "[", field("index", $.exp), "]"),
+          seq(field("object", $.prefixexp), ".", field("field", $.Name)),
+        ),
+      ),
 
     // args ::= '(' [explist] ')' | tableconstructor | LiteralString
     args: ($) => choice(seq("(", optional($.explist), ")"), $.tableconstructor, $.string),
@@ -210,7 +226,29 @@ export default grammar({
     functiondef: ($) => seq("function", $.funcbody),
 
     // funcname ::= Name {'.' Name} [':' Name]
-    funcname: ($) => seq($.Name, repeat(seq(".", $.Name)), optional(seq(":", $.Name))),
+    funcname: ($) =>
+      choice(
+        // foo
+        field("name", $.Name),
+        // foo.bar
+        seq(field("object", $.Name), ".", field("name", $.Name)),
+        // foo.bar.baz
+        seq(
+          field("object", $.Name),
+          repeat1(seq(".", field("module", $.Name))),
+          ".",
+          field("name", $.Name),
+        ),
+        // foo:method
+        seq(field("object", $.Name), ":", field("method", $.Name)),
+        // foo.bar:method
+        seq(
+          field("object", $.Name),
+          repeat(seq(".", field("module", $.Name))),
+          ":",
+          field("method", $.Name),
+        ),
+      ),
 
     // funcbody ::= '(' [parlist] ')' block end
     funcbody: ($) => seq("(", optional($.parlist), ")", optional($.block), "end"),
@@ -232,7 +270,12 @@ export default grammar({
     fieldlist: ($) => seq($.field, repeat(seq($.fieldsep, $.field)), optional($.fieldsep)),
 
     // field ::= '[' exp ']' '=' exp | Name '=' exp | exp
-    field: ($) => choice(seq("[", $.exp, "]", "=", $.exp), seq($.Name, "=", $.exp), $.exp),
+    field: ($) =>
+      choice(
+        seq("[", field("key", $.exp), "]", "=", field("value", $.exp)),
+        seq(field("name", $.Name), "=", field("value", $.exp)),
+        field("value", $.exp),
+      ),
 
     // fieldsep ::= ',' | ';'
     fieldsep: ($) => choice(",", ";"),
@@ -251,7 +294,7 @@ export default grammar({
       ),
 
     // attrib ::= '<' Name '>'
-    attrib: ($) => seq("<", $.Name, ">"),
+    attrib: ($) => seq("<", field("name", $.Name), ">"),
 
     // =========================================================================
     // Block and statements
@@ -265,7 +308,7 @@ export default grammar({
       choice(
         $.empty_stat,
         $.assignment,
-        $.functioncall,
+        $.call_statement,
         $.label,
         $.break_stat,
         $.goto_stat,
@@ -289,14 +332,24 @@ export default grammar({
     // varlist '=' explist
     assignment: ($) => seq($.varlist, "=", $.explist),
 
+    // call statement
+    call_statement: ($) =>
+      prec(
+        1,
+        choice(
+          seq(field("callee", $.exp), field("args", $.args)),
+          seq(field("object", $.exp), ":", field("method", $.Name), field("args", $.args)),
+        ),
+      ),
+
     // '::' Name '::'
-    label: ($) => seq("::", $.Name, "::"),
+    label: ($) => seq("::", field("name", $.Name), "::"),
 
     // break
     break_stat: ($) => "break",
 
     // goto Name
-    goto_stat: ($) => seq("goto", $.Name),
+    goto_stat: ($) => seq("goto", field("label", $.Name)),
 
     // do block end
     do_stat: ($) => seq("do", optional($.block), "end"),
@@ -327,12 +380,12 @@ export default grammar({
     numeric_for: ($) =>
       seq(
         "for",
-        $.Name,
+        field("var", $.Name),
         "=",
-        $.exp,
+        field("start", $.exp),
         ",",
-        $.exp,
-        optional(seq(",", $.exp)),
+        field("limit", $.exp),
+        optional(seq(",", field("step", $.exp))),
         "do",
         optional($.block),
         "end",
@@ -342,19 +395,21 @@ export default grammar({
     generic_for: ($) => seq("for", $.namelist, "in", $.explist, "do", optional($.block), "end"),
 
     // function funcname funcbody
-    function_decl: ($) => seq("function", $.funcname, $.funcbody),
+    function_decl: ($) => seq("function", field("name", $.funcname), field("body", $.funcbody)),
 
     // local function Name funcbody
-    local_function: ($) => seq("local", "function", $.Name, $.funcbody),
+    local_function: ($) =>
+      seq("local", "function", field("name", $.Name), field("body", $.funcbody)),
 
     // global function Name funcbody
-    global_function: ($) => seq("global", "function", $.Name, $.funcbody),
+    global_function: ($) =>
+      seq("global", "function", field("name", $.Name), field("body", $.funcbody)),
 
     // local attnamelist ['=' explist]
     local_decl: ($) => seq("local", $.attnamelist, optional(seq("=", $.explist))),
 
     // global attnamelist
-    global_decl: ($) => seq("global", $.attnamelist),
+    global_decl: ($) => seq("global", $.attnamelist, optional(seq("=", $.explist))),
 
     // global [attrib] '*'
     global_wildcard: ($) => seq("global", optional($.attrib), "*"),

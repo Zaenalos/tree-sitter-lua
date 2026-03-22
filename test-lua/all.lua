@@ -319,3 +319,7 @@ local paren = (1 + 2) * 3
 local t9 = { [tostring(1)] = true }
 
 local result = math.floor(math.sqrt(144))
+
+math.floor(9.9)
+local floor = math.floor(9.9);
+("string"):rep(10)

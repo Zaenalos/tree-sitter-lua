@@ -63,31 +63,43 @@
   {
     "type": "attrib",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
     "type": "binary_expression",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "exp",
-          "named": true
-        }
-      ]
+    "fields": {
+      "left": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "right": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -113,6 +125,98 @@
     "type": "boolean",
     "named": true,
     "fields": {}
+  },
+  {
+    "type": "call_expression",
+    "named": true,
+    "fields": {
+      "args": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "args",
+            "named": true
+          }
+        ]
+      },
+      "callee": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "prefixexp",
+            "named": true
+          }
+        ]
+      },
+      "method": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "prefixexp",
+            "named": true
+          }
+        ]
+      }
+    }
+  },
+  {
+    "type": "call_statement",
+    "named": true,
+    "fields": {
+      "args": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "args",
+            "named": true
+          }
+        ]
+      },
+      "callee": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "method": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
+    }
   },
   {
     "type": "comment",
@@ -196,6 +300,10 @@
           "named": true
         },
         {
+          "type": "call_expression",
+          "named": true
+        },
+        {
           "type": "functiondef",
           "named": true
         },
@@ -248,20 +356,37 @@
   {
     "type": "field",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "exp",
-          "named": true
-        }
-      ]
+    "fields": {
+      "key": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -310,58 +435,73 @@
   {
     "type": "funcname",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "method": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "module": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
     "type": "function_decl",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "funcbody",
-          "named": true
-        },
-        {
-          "type": "funcname",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "functioncall",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "args",
-          "named": true
-        },
-        {
-          "type": "prefixexp",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "funcbody",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "funcname",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -407,11 +547,15 @@
     "named": true,
     "fields": {},
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "attnamelist",
+          "named": true
+        },
+        {
+          "type": "explist",
           "named": true
         }
       ]
@@ -420,20 +564,27 @@
   {
     "type": "global_function",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "funcbody",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "funcbody",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -454,16 +605,17 @@
   {
     "type": "goto_stat",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "label": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -496,16 +648,17 @@
   {
     "type": "label",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        }
-      ]
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -530,20 +683,27 @@
   {
     "type": "local_function",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "funcbody",
-          "named": true
-        }
-      ]
+    "fields": {
+      "body": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "funcbody",
+            "named": true
+          }
+        ]
+      },
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
@@ -574,21 +734,54 @@
   {
     "type": "numeric_for",
     "named": true,
-    "fields": {},
+    "fields": {
+      "limit": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "start": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "step": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "var": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
         {
-          "type": "Name",
-          "named": true
-        },
-        {
           "type": "block",
-          "named": true
-        },
-        {
-          "type": "exp",
           "named": true
         }
       ]
@@ -616,25 +809,64 @@
   {
     "type": "prefixexp",
     "named": true,
-    "fields": {},
+    "fields": {
+      "base": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "field": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "index": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "prefixexp",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
-      "multiple": true,
-      "required": true,
+      "multiple": false,
+      "required": false,
       "types": [
         {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "args",
-          "named": true
-        },
-        {
-          "type": "exp",
-          "named": true
-        },
-        {
-          "type": "prefixexp",
+          "type": "call_expression",
           "named": true
         }
       ]
@@ -726,6 +958,10 @@
           "named": true
         },
         {
+          "type": "call_statement",
+          "named": true
+        },
+        {
           "type": "do_stat",
           "named": true
         },
@@ -735,10 +971,6 @@
         },
         {
           "type": "function_decl",
-          "named": true
-        },
-        {
-          "type": "functioncall",
           "named": true
         },
         {
@@ -829,39 +1061,63 @@
   {
     "type": "unary_expression",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "exp",
-          "named": true
-        }
-      ]
+    "fields": {
+      "operand": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
     "type": "var",
     "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "Name",
-          "named": true
-        },
-        {
-          "type": "exp",
-          "named": true
-        },
-        {
-          "type": "prefixexp",
-          "named": true
-        }
-      ]
+    "fields": {
+      "base": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "field": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "Name",
+            "named": true
+          }
+        ]
+      },
+      "index": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "exp",
+            "named": true
+          }
+        ]
+      },
+      "object": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "prefixexp",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {

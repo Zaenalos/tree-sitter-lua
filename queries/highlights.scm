@@ -1,51 +1,37 @@
-; === KEYWORDS ===
-; The following keywords are reserved and cannot be used as names:
+; === HIGHLIGHTS ===
 
-;     and       break     do        else      elseif    end
-;     false     for       function  global    goto      if
-;     in        local     nil       not       or        repeat
-;     return    then      true      until     while
-
-; "and", "or", "not" are handled in binop and unop.
-; "false", "true", "nil" are handled in constant.
+; --- Keywords ---
 [
-(break_stat) @keyword ; break is a named node type, so ...
-"do"
-"else"
-"elseif"
-"end"
-"for"
-"function"
-"global"
-"goto"
-"if"
-"in"
-"local"
-"repeat"
-"return"
-"then"
-"until"
-"while"
+  (break_stat)
+  "do" "else" "elseif" "end" "for"
+  "global" "goto" "if" "in" "local"
+  "repeat" "return" "then" "until" "while"
+  "function"
 ] @keyword
 
-; === COMMENTS ===
+; --- Comments ---
 (comment) @comment
 (shebang) @comment.special
 
-; === NAME/IDENTIFIER ===
-(Name) @variable
-
-; === EXPRESSIONS ===
+; --- Literals ---
 (nil) @constant.builtin
 (boolean) @boolean
 (numeral) @number
 (string) @string
 (escape_sequence) @string.escape
-(vararg) @constant.builtin
-(binary_expression) @keyword.operator
-(unary_expression) @keyword.operator
+(vararg) @variable.special
 
-; === PUNCTUATIONS ===
+; --- Operators ---
+(binary_expression "and") @keyword.operator
+(binary_expression "or") @keyword.operator
+(unary_expression "not") @keyword.operator
+(binary_expression ["+" "-" "*" "/" "//" "%" "^"
+                    "&" "|" "~" "<<" ">>" ".."
+                    "==" "~=" "<" "<=" ">" ">="]) @operator
+(unary_expression ["-" "#" "~"]) @operator
+(assignment "=") @operator
+
+; --- Punctuation ---
 "(" @punctuation.bracket
 ")" @punctuation.bracket
 "[" @punctuation.bracket
@@ -58,34 +44,102 @@
 "," @punctuation.delimiter
 ";" @punctuation.delimiter
 
-; === SPECIALS ===
-; Let's call these specials cuz imma put special highlighting here
-; attributes
-(attrib (Name) @attribute)
-; for goto labels and the ::target::
-(goto_stat
-  (Name) @label
-)
-(label
-  "::" @label
-  (Name) @label
-)
+; =============================================================================
+; TIER 2 — @variable fallback
+; (#is-not? local) means: only fire if locals.scm hasn't resolved this node
+; as a local reference. This prevents double-coloring declared locals.
+; =============================================================================
 
-; === FUNCTIONS ===
+((Name) @variable
+ (#is-not? local))
+
+; =============================================================================
+; TIER 3 — Specific overrides (all AFTER fallback, last match wins)
+; =============================================================================
+
+; --- Attributes ---
+(attrib name: (Name) @attribute)
+
+; --- Labels ---
+(goto_stat label: (Name) @label)
+(label name: (Name) @label)
+
+; --- Parameters ---
 (parlist (namelist (Name) @variable.parameter))
 (varargparam (vararg) @variable.parameter)
-(funcname
-  (Name) @function ; This also handles the highlighting for function_decl node
+
+; --- Properties ---
+; field: in prefixexp/var — right side of dot access
+(prefixexp field: (Name) @property)
+(var field: (Name) @property)
+; table constructor key names: { x = 1 } → x is a property key
+(field name: (Name) @property)
+; funcname module: and method: are table keys
+(funcname module: (Name) @property)
+(funcname method: (Name) @property)
+
+; --- Function declarations → @function ---
+; function foo() / function foo.bar() / function foo:method()
+(function_decl
+  name: (funcname
+    name: (Name) @function ; where function foo.method() | foo()
+  )
 )
-(local_function
-  (Name) @function
+(function_decl
+  name: (funcname
+    method: (Name) @function ; where function foo:method()
+  )
 )
-(global_function
-  (Name) @function
+; local function foo()
+(local_function name: (Name) @function)
+; global function foo()
+(global_function name: (Name) @function)
+
+; --- Call sites → @function.call (must be LAST) ---
+; base() — call statement
+(call_statement
+  callee: (exp
+    (prefixexp
+      base: (Name) @function.call ; where `foo` is the base
+    )
+  )
 )
 
-; === CALLS ===
-; TODO: proper highlighting for func calls
-; (functioncall
-;   (Name) @function
-; )
+; foo.field() — call statement
+(call_statement
+  callee: (exp
+    (prefixexp
+      field: (Name) @function.call ; where `bar` or whatsoever is the last index/field
+    )
+  )
+)
+
+; foo:method() — call statement
+(call_statement
+  method: (Name) @function.call ; where `method` or blah blah that comes after ":"
+)
+
+; ; obj:method()() — call statement
+; (call_statement
+;   callee: (prefixexp
+;     object: (prefixexp)
+;     method: (Name) @function.call))
+
+; base() - call expression
+(call_expression
+  callee: (prefixexp
+    base: (Name) @function.call
+  )
+)
+
+; foo:method() - call expression
+(call_expression
+  method: (Name) @function.call
+)
+
+; foo.field() - call expression
+(call_expression
+  callee: (prefixexp
+    field: (Name) @function.call
+  )
+)
