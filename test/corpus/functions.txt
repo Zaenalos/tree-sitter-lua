@@ -1,0 +1,214 @@
+================================================================================
+Simple function call
+================================================================================
+print("hello")
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (call_statement
+        (exp
+          (prefixexp
+            (Name)))
+        (args
+          (explist
+            (exp
+              (string
+                (short_string)))))))))
+
+================================================================================
+Method call
+================================================================================
+str:upper()
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (call_statement
+        (exp
+          (prefixexp
+            (Name)))
+        (Name)
+        (args)))))
+
+================================================================================
+Chained field call
+================================================================================
+math.max(1, 2)
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (call_statement
+        (exp
+          (prefixexp
+            (prefixexp
+              (Name))
+            (Name)))
+        (args
+          (explist
+            (exp
+              (numeral))
+            (exp
+              (numeral))))))))
+
+================================================================================
+Function declaration
+================================================================================
+function foo()
+  return 1
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (function_decl
+        (funcname
+          (Name))
+        (funcbody
+          (block
+            (retstat
+              (explist
+                (exp
+                  (numeral))))))))))
+
+================================================================================
+Local function declaration
+================================================================================
+local function foo(a, b)
+  return a + b
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (local_function
+        (Name)
+        (funcbody
+          (parlist
+            (namelist
+              (Name)
+              (Name)))
+          (block
+            (retstat
+              (explist
+                (exp
+                  (binary_expression
+                    (exp
+                      (prefixexp
+                        (Name)))
+                    (exp
+                      (prefixexp
+                        (Name)))))))))))))
+
+================================================================================
+Global function declaration
+================================================================================
+global function foo()
+  return true
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (global_function
+        (Name)
+        (funcbody
+          (block
+            (retstat
+              (explist
+                (exp
+                  (boolean))))))))))
+
+================================================================================
+Method declaration
+================================================================================
+function MyClass:init(value)
+  self.value = value
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (function_decl
+        (funcname
+          (Name)
+          (Name))
+        (funcbody
+          (parlist
+            (namelist
+              (Name)))
+          (block
+            (stat
+              (assignment
+                (varlist
+                  (var
+                    (prefixexp
+                      (Name))
+                    (Name)))
+                (explist
+                  (exp
+                    (prefixexp
+                      (Name))))))))))))
+
+================================================================================
+Vararg function
+================================================================================
+local function f(...)
+  return ...
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (local_function
+        (Name)
+        (funcbody
+          (parlist
+            (varargparam
+              (vararg)))
+          (block
+            (retstat
+              (explist
+                (exp
+                  (vararg))))))))))
+
+================================================================================
+Function with mixed params
+================================================================================
+local function f(a, b, ...)
+  return a + b
+end
+--------------------------------------------------------------------------------
+
+(source_file
+  (block
+    (stat
+      (local_function
+        (Name)
+        (funcbody
+          (parlist
+            (namelist
+              (Name)
+              (Name))
+            (varargparam
+              (vararg)))
+          (block
+            (retstat
+              (explist
+                (exp
+                  (binary_expression
+                    (exp
+                      (prefixexp
+                        (Name)))
+                    (exp
+                      (prefixexp
+                        (Name)))))))))))))
