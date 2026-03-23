@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "tree-sitter-lua"
 description = "Tree sitter for Lua"
-version = "0.1.0"
+version = "1.0.0"
 keywords = ["incremental", "parsing", "tree-sitter", "lua"]
 classifiers = [
   "Intended Audience :: Developers",

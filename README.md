@@ -13,7 +13,7 @@ You might want to check the Zed extension I'm working on: https://github.com/Zae
 ## Features
 
 - Full Lua 5.1 - 5.5 syntax support including `global` declarations, attributes (`<const>`, `<close>`), and `global *`
-- Correct long string and long comment parsing — `--[==[...]==]` vs `-- [[...]]`
+- Complete syntax highlighting, check [highlights.scm](https://github.com/Zaenalos/tree-sitter-lua/blob/main/queries/highlights.scm)
 
 ## Usage
 
@@ -21,12 +21,14 @@ You might want to check the Zed extension I'm working on: https://github.com/Zae
 
 ```bash
 npm install -g tree-sitter-cli
+# or you might want to use bun
+bun add -g tree-sitter-cli # requires node v22.22.1
 tree-sitter parse your_file.lua
 tree-sitter highlight your_file.lua
 
 # testing
 tree-sitter test
-tree-sitter parse test-lua/*
+tree-sitter parse test-lua/*.lua
 ```
 
 ## Tests
@@ -34,15 +36,20 @@ tree-sitter parse test-lua/*
 | Suite                                                           | Status                        |
 | --------------------------------------------------------------- | ----------------------------- |
 | Corpus (literals, expressions, statements, functions, comments) | ✅ 55/55 passing              |
-| Sample file parsing (`test-lua/all.lua`)                        | ✅ No errors or missing nodes |
+| Sample file parsing (`test-lua/*.lua`)                          | ✅ No errors or missing nodes |
 
 ## Contributing
 
 Found a bug or missing feature? Feel free to [open an issue](https://github.com/Zaenalos/tree-sitter-lua/issues) or submit a pull request.
 
+## References
+
+- https://tree-sitter.github.io/tree-sitter/
+- https://lua.org/manual/5.5/manual.html
+
 ## License
 
-MIT
+[MIT](https://github.com/Zaenalos/tree-sitter-lua?tab=MIT-1-ov-file)
 
 ---
 

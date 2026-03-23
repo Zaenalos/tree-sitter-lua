@@ -1,13 +1,12 @@
 {
   "name": "tree-sitter-lua",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Tree sitter for Lua",
   "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zaenalos/tree-sitter-lua.git"
   },
-  "funding": "",
   "license": "MIT",
   "author": {
     "name": "Zaenalos",
