@@ -6,17 +6,13 @@ local x = 1 + 2
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (binary_expression
-              (exp
-                (numeral))
-              (exp
-                (numeral)))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (binary_expression
+          (numeral)
+          (numeral))))))
 
 ================================================================================
 Binary concat
@@ -26,19 +22,15 @@ local s = "a" .. "b"
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (binary_expression
-              (exp
-                (string
-                  (short_string)))
-              (exp
-                (string
-                  (short_string))))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (binary_expression
+          (string
+            (short_string))
+          (string
+            (short_string)))))))
 
 ================================================================================
 Unary negation
@@ -48,15 +40,12 @@ local x = -1
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (unary_expression
-              (exp
-                (numeral)))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (unary_expression
+          (numeral))))))
 
 ================================================================================
 Unary not
@@ -66,15 +55,12 @@ local x = not true
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (unary_expression
-              (exp
-                (boolean)))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (unary_expression
+          (boolean))))))
 
 ================================================================================
 Unary length
@@ -84,16 +70,13 @@ local x = #"hello"
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (unary_expression
-              (exp
-                (string
-                  (short_string))))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (unary_expression
+          (string
+            (short_string)))))))
 
 ================================================================================
 Parenthesized expression
@@ -103,23 +86,16 @@ local x = (1 + 2) * 3
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (binary_expression
+          (primary
             (binary_expression
-              (exp
-                (prefixexp
-                  (exp
-                    (binary_expression
-                      (exp
-                        (numeral))
-                      (exp
-                        (numeral))))))
-              (exp
-                (numeral)))))))))
+              (numeral)
+              (numeral)))
+          (numeral))))))
 
 ================================================================================
 Field access
@@ -129,16 +105,14 @@ local x = t.field
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (prefixexp
-              (prefixexp
-                (Name))
-              (Name))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (primary
+          (primary
+            (Name))
+          (Name))))))
 
 ================================================================================
 Index access
@@ -148,17 +122,14 @@ local x = t[1]
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (prefixexp
-              (prefixexp
-                (Name))
-              (exp
-                (numeral)))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (primary
+          (primary
+            (Name))
+          (numeral))))))
 
 ================================================================================
 Table constructor empty
@@ -168,13 +139,11 @@ local t = {}
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (tableconstructor)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (tableconstructor)))))
 
 ================================================================================
 Table constructor array style
@@ -184,25 +153,20 @@ local t = { 1, 2, 3 }
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (tableconstructor
-              (fieldlist
-                (field
-                  (exp
-                    (numeral)))
-                (fieldsep)
-                (field
-                  (exp
-                    (numeral)))
-                (fieldsep)
-                (field
-                  (exp
-                    (numeral)))))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (tableconstructor
+          (fieldlist
+            (field
+              (numeral))
+            (fieldsep)
+            (field
+              (numeral))
+            (fieldsep)
+            (field
+              (numeral))))))))
 
 ================================================================================
 Table constructor record style
@@ -212,23 +176,19 @@ local t = { x = 1, y = 2 }
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (tableconstructor
-              (fieldlist
-                (field
-                  (Name)
-                  (exp
-                    (numeral)))
-                (fieldsep)
-                (field
-                  (Name)
-                  (exp
-                    (numeral)))))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (tableconstructor
+          (fieldlist
+            (field
+              (Name)
+              (numeral))
+            (fieldsep)
+            (field
+              (Name)
+              (numeral))))))))
 
 ================================================================================
 Anonymous function
@@ -238,20 +198,17 @@ local f = function(x) return x end
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (functiondef
-              (funcbody
-                (parlist
-                  (namelist
-                    (Name)))
-                (block
-                  (retstat
-                    (explist
-                      (exp
-                        (prefixexp
-                          (Name))))))))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (functiondef
+          (funcbody
+            (parlist
+              (namelist
+                (Name)))
+            (block
+              (retstat
+                (explist
+                  (primary
+                    (Name)))))))))))

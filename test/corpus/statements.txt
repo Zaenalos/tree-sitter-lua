@@ -6,8 +6,7 @@ Empty statement
 
 (source_file
   (block
-    (stat
-      (empty_stat))))
+    (empty_stat)))
 
 ================================================================================
 Simple assignment
@@ -17,14 +16,12 @@ x = 1
 
 (source_file
   (block
-    (stat
-      (assignment
-        (varlist
-          (var
-            (Name)))
-        (explist
-          (exp
-            (numeral)))))))
+    (assignment
+      (varlist
+        (primary
+          (Name)))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Multi assignment
@@ -34,18 +31,15 @@ x, y = 1, 2
 
 (source_file
   (block
-    (stat
-      (assignment
-        (varlist
-          (var
-            (Name))
-          (var
-            (Name)))
-        (explist
-          (exp
-            (numeral))
-          (exp
-            (numeral)))))))
+    (assignment
+      (varlist
+        (primary
+          (Name))
+        (primary
+          (Name)))
+      (explist
+        (numeral)
+        (numeral)))))
 
 ================================================================================
 Local declaration
@@ -55,13 +49,11 @@ local x = 1
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Local declaration with attribute
@@ -71,15 +63,13 @@ local x <const> = 1
 
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist
-          (Name)
-          (attrib
-            (Name)))
-        (explist
-          (exp
-            (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name)
+        (attrib
+          (Name)))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Global declaration
@@ -89,13 +79,11 @@ global x = 1
 
 (source_file
   (block
-    (stat
-      (global_decl
-        (attnamelist
-          (Name))
-        (explist
-          (exp
-            (numeral)))))))
+    (global_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Do block
@@ -107,16 +95,13 @@ end
 
 (source_file
   (block
-    (stat
-      (do_stat
-        (block
-          (stat
-            (local_decl
-              (attnamelist
-                (Name))
-              (explist
-                (exp
-                  (numeral))))))))))
+    (do_stat
+      (block
+        (local_decl
+          (attnamelist
+            (Name))
+          (explist
+            (numeral)))))))
 
 ================================================================================
 While loop
@@ -128,17 +113,13 @@ end
 
 (source_file
   (block
-    (stat
-      (while_stat
-        (exp
-          (boolean))
-        (block
-          (stat
-            (call_statement
-              (exp
-                (prefixexp
-                  (Name)))
-              (args))))))))
+    (while_stat
+      (boolean)
+      (block
+        (call_stat
+          (primary
+            (Name))
+          (args))))))
 
 ================================================================================
 Repeat until
@@ -150,29 +131,21 @@ until x > 10
 
 (source_file
   (block
-    (stat
-      (repeat_stat
-        (block
-          (stat
-            (assignment
-              (varlist
-                (var
-                  (Name)))
-              (explist
-                (exp
-                  (binary_expression
-                    (exp
-                      (prefixexp
-                        (Name)))
-                    (exp
-                      (numeral))))))))
-        (exp
-          (binary_expression
-            (exp
-              (prefixexp
-                (Name)))
-            (exp
-              (numeral))))))))
+    (repeat_stat
+      (block
+        (assignment
+          (varlist
+            (primary
+              (Name)))
+          (explist
+            (binary_expression
+              (primary
+                (Name))
+              (numeral)))))
+      (binary_expression
+        (primary
+          (Name))
+        (numeral)))))
 
 ================================================================================
 If statement
@@ -184,17 +157,13 @@ end
 
 (source_file
   (block
-    (stat
-      (if_stat
-        (exp
-          (boolean))
-        (block
-          (stat
-            (call_statement
-              (exp
-                (prefixexp
-                  (Name)))
-              (args))))))))
+    (if_stat
+      (boolean)
+      (block
+        (call_stat
+          (primary
+            (Name))
+          (args))))))
 
 ================================================================================
 If elseif else
@@ -210,37 +179,28 @@ end
 
 (source_file
   (block
-    (stat
-      (if_stat
-        (exp
-          (prefixexp
-            (Name)))
+    (if_stat
+      (primary
+        (Name))
+      (block
+        (call_stat
+          (primary
+            (Name))
+          (args)))
+      (elseif_clause
+        (primary
+          (Name))
         (block
-          (stat
-            (call_statement
-              (exp
-                (prefixexp
-                  (Name)))
-              (args))))
-        (elseif_clause
-          (exp
-            (prefixexp
-              (Name)))
-          (block
-            (stat
-              (call_statement
-                (exp
-                  (prefixexp
-                    (Name)))
-                (args)))))
-        (else_clause
-          (block
-            (stat
-              (call_statement
-                (exp
-                  (prefixexp
-                    (Name)))
-                (args)))))))))
+          (call_stat
+            (primary
+              (Name))
+            (args))))
+      (else_clause
+        (block
+          (call_stat
+            (primary
+              (Name))
+            (args)))))))
 
 ================================================================================
 Numeric for
@@ -252,24 +212,18 @@ end
 
 (source_file
   (block
-    (stat
-      (numeric_for
-        (Name)
-        (exp
-          (numeral))
-        (exp
-          (numeral))
-        (block
-          (stat
-            (call_statement
-              (exp
-                (prefixexp
-                  (Name)))
-              (args
-                (explist
-                  (exp
-                    (prefixexp
-                      (Name))))))))))))
+    (numeric_for
+      (Name)
+      (numeral)
+      (numeral)
+      (block
+        (call_stat
+          (primary
+            (Name))
+          (args
+            (explist
+              (primary
+                (Name)))))))))
 
 ================================================================================
 Numeric for with step
@@ -279,17 +233,12 @@ for i = 10, 1, -1 do end
 
 (source_file
   (block
-    (stat
-      (numeric_for
-        (Name)
-        (exp
-          (numeral))
-        (exp
-          (numeral))
-        (exp
-          (unary_expression
-            (exp
-              (numeral))))))))
+    (numeric_for
+      (Name)
+      (numeral)
+      (numeral)
+      (unary_expression
+        (numeral)))))
 
 ================================================================================
 Generic for
@@ -299,20 +248,17 @@ for k, v in pairs({}) do end
 
 (source_file
   (block
-    (stat
-      (generic_for
-        (namelist
-          (Name)
-          (Name))
-        (explist
-          (exp
-            (call_expression
-              (prefixexp
-                (Name))
-              (args
-                (explist
-                  (exp
-                    (tableconstructor)))))))))))
+    (generic_for
+      (namelist
+        (Name)
+        (Name))
+      (explist
+        (primary
+          (primary
+            (Name))
+          (args
+            (explist
+              (tableconstructor))))))))
 
 ================================================================================
 Break statement
@@ -324,16 +270,12 @@ end
 
 (source_file
   (block
-    (stat
-      (numeric_for
-        (Name)
-        (exp
-          (numeral))
-        (exp
-          (numeral))
-        (block
-          (stat
-            (break_stat)))))))
+    (numeric_for
+      (Name)
+      (numeral)
+      (numeral)
+      (block
+        (break_stat)))))
 
 ================================================================================
 Goto and label
@@ -344,12 +286,10 @@ goto skip
 
 (source_file
   (block
-    (stat
-      (goto_stat
-        (Name)))
-    (stat
-      (label
-        (Name)))))
+    (goto_stat
+      (Name))
+    (label
+      (Name))))
 
 ================================================================================
 Return statement
@@ -361,9 +301,6 @@ return 1, 2, 3
   (block
     (retstat
       (explist
-        (exp
-          (numeral))
-        (exp
-          (numeral))
-        (exp
-          (numeral))))))
+        (numeral)
+        (numeral)
+        (numeral)))))

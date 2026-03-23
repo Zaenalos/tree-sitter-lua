@@ -6,16 +6,13 @@ print("hello")
 
 (source_file
   (block
-    (stat
-      (call_statement
-        (exp
-          (prefixexp
-            (Name)))
-        (args
-          (explist
-            (exp
-              (string
-                (short_string)))))))))
+    (call_stat
+      (primary
+        (Name))
+      (args
+        (explist
+          (string
+            (short_string)))))))
 
 ================================================================================
 Method call
@@ -25,13 +22,11 @@ str:upper()
 
 (source_file
   (block
-    (stat
-      (call_statement
-        (exp
-          (prefixexp
-            (Name)))
-        (Name)
-        (args)))))
+    (call_stat
+      (primary
+        (Name))
+      (Name)
+      (args))))
 
 ================================================================================
 Chained field call
@@ -41,19 +36,15 @@ math.max(1, 2)
 
 (source_file
   (block
-    (stat
-      (call_statement
-        (exp
-          (prefixexp
-            (prefixexp
-              (Name))
-            (Name)))
-        (args
-          (explist
-            (exp
-              (numeral))
-            (exp
-              (numeral))))))))
+    (call_stat
+      (primary
+        (primary
+          (Name))
+        (Name))
+      (args
+        (explist
+          (numeral)
+          (numeral))))))
 
 ================================================================================
 Function declaration
@@ -65,16 +56,14 @@ end
 
 (source_file
   (block
-    (stat
-      (function_decl
-        (funcname
-          (Name))
-        (funcbody
-          (block
-            (retstat
-              (explist
-                (exp
-                  (numeral))))))))))
+    (function_decl
+      (funcname
+        (Name))
+      (funcbody
+        (block
+          (retstat
+            (explist
+              (numeral))))))))
 
 ================================================================================
 Local function declaration
@@ -86,25 +75,21 @@ end
 
 (source_file
   (block
-    (stat
-      (local_function
-        (Name)
-        (funcbody
-          (parlist
-            (namelist
-              (Name)
-              (Name)))
-          (block
-            (retstat
-              (explist
-                (exp
-                  (binary_expression
-                    (exp
-                      (prefixexp
-                        (Name)))
-                    (exp
-                      (prefixexp
-                        (Name)))))))))))))
+    (local_function
+      (Name)
+      (funcbody
+        (parlist
+          (namelist
+            (Name)
+            (Name)))
+        (block
+          (retstat
+            (explist
+              (binary_expression
+                (primary
+                  (Name))
+                (primary
+                  (Name))))))))))
 
 ================================================================================
 Global function declaration
@@ -116,15 +101,13 @@ end
 
 (source_file
   (block
-    (stat
-      (global_function
-        (Name)
-        (funcbody
-          (block
-            (retstat
-              (explist
-                (exp
-                  (boolean))))))))))
+    (global_function
+      (Name)
+      (funcbody
+        (block
+          (retstat
+            (explist
+              (boolean))))))))
 
 ================================================================================
 Method declaration
@@ -136,27 +119,24 @@ end
 
 (source_file
   (block
-    (stat
-      (function_decl
-        (funcname
-          (Name)
-          (Name))
-        (funcbody
-          (parlist
-            (namelist
-              (Name)))
-          (block
-            (stat
-              (assignment
-                (varlist
-                  (var
-                    (prefixexp
-                      (Name))
-                    (Name)))
-                (explist
-                  (exp
-                    (prefixexp
-                      (Name))))))))))))
+    (function_decl
+      (funcname
+        (Name)
+        (Name))
+      (funcbody
+        (parlist
+          (namelist
+            (Name)))
+        (block
+          (assignment
+            (varlist
+              (primary
+                (primary
+                  (Name))
+                (Name)))
+            (explist
+              (primary
+                (Name)))))))))
 
 ================================================================================
 Vararg function
@@ -168,18 +148,16 @@ end
 
 (source_file
   (block
-    (stat
-      (local_function
-        (Name)
-        (funcbody
-          (parlist
-            (varargparam
-              (vararg)))
-          (block
-            (retstat
-              (explist
-                (exp
-                  (vararg))))))))))
+    (local_function
+      (Name)
+      (funcbody
+        (parlist
+          (varargparam
+            (vararg)))
+        (block
+          (retstat
+            (explist
+              (vararg))))))))
 
 ================================================================================
 Function with mixed params
@@ -191,24 +169,20 @@ end
 
 (source_file
   (block
-    (stat
-      (local_function
-        (Name)
-        (funcbody
-          (parlist
-            (namelist
-              (Name)
-              (Name))
-            (varargparam
-              (vararg)))
-          (block
-            (retstat
-              (explist
-                (exp
-                  (binary_expression
-                    (exp
-                      (prefixexp
-                        (Name)))
-                    (exp
-                      (prefixexp
-                        (Name)))))))))))))
+    (local_function
+      (Name)
+      (funcbody
+        (parlist
+          (namelist
+            (Name)
+            (Name))
+          (varargparam
+            (vararg)))
+        (block
+          (retstat
+            (explist
+              (binary_expression
+                (primary
+                  (Name))
+                (primary
+                  (Name))))))))))

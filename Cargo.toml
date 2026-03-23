@@ -1,7 +1,7 @@
 [package]
 name = "tree-sitter-lua"
 description = "Tree sitter for Lua"
-version = "1.0.0"
+version = "2.0.0"
 authors = ["Zaenalos <chamianramesesmendez@gmail.com>"]
 license = "MIT"
 readme = "README.md"

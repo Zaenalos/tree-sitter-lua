@@ -4,13 +4,15 @@ Short comment
 -- this is a comment
 local x = 1
 --------------------------------------------------------------------------------
+
 (source_file
   (comment)
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Long comment level 0
@@ -20,13 +22,15 @@ Long comment level 0
 ]]
 local x = 1
 --------------------------------------------------------------------------------
+
 (source_file
   (comment)
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Long comment level 2
@@ -36,10 +40,12 @@ Long comment level 2
 ]==]
 local x = 1
 --------------------------------------------------------------------------------
+
 (source_file
   (comment)
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))

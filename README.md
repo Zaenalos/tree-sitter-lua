@@ -2,13 +2,13 @@
 <h1>tree-sitter-lua</h1>
 </div>
 
+![CI](https://github.com/Zaenalos/tree-sitter-lua/actions/workflows/ci.yml/badge.svg)
+
 A [Tree-sitter](https://tree-sitter.github.io/tree-sitter/) grammar for [Lua 5.5](https://www.lua.org/manual/5.5/).
 
 Built primarily to power a [Zed](https://zed.dev/) extension, but compatible with any editor or tool that supports Tree-sitter — including VS Code (via [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) or similar), Neovim, Emacs, and others.
 
 You might want to check the Zed extension I'm working on: https://github.com/Zaenalos/Lua-Zed
-
-![CI](https://github.com/Zaenalos/tree-sitter-lua/actions/workflows/ci.yml/badge.svg)
 
 ## Features
 

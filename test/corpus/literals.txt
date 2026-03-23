@@ -3,156 +3,188 @@ Nil literal
 ================================================================================
 local x = nil
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (nil)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (nil)))))
 
 ================================================================================
 Boolean true
 ================================================================================
 local x = true
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (boolean)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (boolean)))))
 
 ================================================================================
 Boolean false
 ================================================================================
 local x = false
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (boolean)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (boolean)))))
 
 ================================================================================
 Integer literal
 ================================================================================
 local x = 42
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Hex integer literal
 ================================================================================
 local x = 0xff
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Decimal float literal
 ================================================================================
 local x = 3.14
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Float with exponent
 ================================================================================
 local x = 3.14e-2
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Hex float literal
 ================================================================================
 local x = 0xA23p-4
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (numeral)))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (numeral)))))
 
 ================================================================================
 Double quoted string
 ================================================================================
 local s = "hello"
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (string (short_string))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (string
+          (short_string))))))
 
 ================================================================================
 Single quoted string
 ================================================================================
 local s = 'hello'
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (string (short_string))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (string
+          (short_string))))))
 
 ================================================================================
 String with escape sequence
 ================================================================================
 local s = "hello\nworld"
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (string (short_string (escape_sequence)))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (string
+          (short_string
+            (escape_sequence)))))))
 
 ================================================================================
 Long string level 0
 ================================================================================
 local s = [[hello]]
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (string (long_string))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (string
+          (long_string))))))
 
 ================================================================================
 Long string level 2
 ================================================================================
 local s = [==[hello]==]
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_decl
-        (attnamelist (Name))
-        (explist (exp (string (long_string))))))))
+    (local_decl
+      (attnamelist
+        (Name))
+      (explist
+        (string
+          (long_string))))))
 
 ================================================================================
 Vararg literal
@@ -161,13 +193,16 @@ local function f(...)
   return ...
 end
 --------------------------------------------------------------------------------
+
 (source_file
   (block
-    (stat
-      (local_function
-        (Name)
-        (funcbody
-          (parlist (varargparam (vararg)))
-          (block
-            (retstat
-              (explist (exp (vararg))))))))))
+    (local_function
+      (Name)
+      (funcbody
+        (parlist
+          (varargparam
+            (vararg)))
+        (block
+          (retstat
+            (explist
+              (vararg))))))))

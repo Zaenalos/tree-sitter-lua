@@ -1,6 +1,6 @@
 LANGUAGE_NAME := tree-sitter-lua
 HOMEPAGE_URL := https://github.com/zaenalos/tree-sitter-lua
-VERSION := 1.0.0
+VERSION := 2.0.0
 
 # repository
 SRC_DIR := src
